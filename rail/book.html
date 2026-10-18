@@ -3,6 +3,7 @@
 <div class="demo">Demo environment. Stands in for the CN and CP customer portals.</div>
 <main><div id="nav"></div><h1>New ramp-to-ramp booking</h1><p class="sub">All fields marked required must be filled before you submit.</p>
 <form id="f" onsubmit="return submitBooking(event)">
+<label>Quote number<input id="quote" name="quote" placeholder="Q-CN-000000"></label>
 <label>Railway (required)<select id="railway" name="railway" onchange="fillRamps()"><option value="CN">CN</option><option value="CP">CP</option></select></label>
 <label>Departure date (required)<input id="departure" name="departure" type="date"></label>
 <label>Origin ramp (required)<select id="origin" name="origin"></select></label>
@@ -28,6 +29,6 @@ const missing=[['departure','Departure date'],['container','Container number'],[
 if(g('origin')===g('destination'))missing.push('Different origin and destination ramps');
 if(g('equipment')==="53' reefer"&&!g('setpoint'))missing.push('Set point for reefer');
 if(missing.length){document.getElementById('err').textContent='Fix before submitting: '+missing.join(', ')+'.';return false;}
-const p=new URLSearchParams({railway:g('railway'),origin:g('origin'),destination:g('destination'),departure:g('departure'),container:g('container'),equipment:g('equipment'),seal:g('seal'),weight:g('weight'),setpoint:g('setpoint'),precool:g('precool'),reference:g('reference')});
+const p=new URLSearchParams({railway:g('railway'),origin:g('origin'),destination:g('destination'),departure:g('departure'),container:g('container'),equipment:g('equipment'),seal:g('seal'),weight:g('weight'),setpoint:g('setpoint'),precool:g('precool'),reference:g('reference'),quote:g('quote')});
 location.href='/rail/confirm.html?'+p.toString();return false;}
 </script></body></html>

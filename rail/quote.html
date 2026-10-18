@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Get quote – Rail booking portal</title><link rel="stylesheet" href="/styles.css"><script src="/rail/app.js"></script></head>
+<body><header><b>Rail booking portal</b><small>Get quote</small></header>
+<div class="demo">Demo environment. Stands in for the CN and CP customer portals.</div>
+<main><div id="nav"></div><h1>Get quote</h1><p class="sub">Price a ramp-to-ramp move and check space. Nothing is booked or held.</p>
+<form id="f" onsubmit="return getQuote(event)">
+<label>Railway<select id="railway" onchange="fill()"><option value="CN">CN</option><option value="CP">CP</option></select></label>
+<label>Departure date<input id="departure" type="date"></label>
+<label>Origin ramp<select id="origin"></select></label>
+<label>Destination ramp<select id="destination"></select></label>
+<label>Equipment type<select id="equipment"><option>53' dry</option><option>53' heated</option><option>53' reefer</option></select></label>
+<label>Gross weight, lb<input id="weight" type="number" min="1"></label>
+<span class="err full" id="err"></span>
+<div class="full"><button type="submit" id="get-quote">Get quote</button></div></form>
+<div id="out"></div></main>
+<script>
+requireLogin();document.getElementById('nav').innerHTML=nav();
+function fill(){const r=document.getElementById('railway').value;document.getElementById('origin').innerHTML=rampOptions(r);document.getElementById('destination').innerHTML=rampOptions(r);}fill();
+function getQuote(e){e.preventDefault();const g=id=>document.getElementById(id).value.trim();
+const miss=[['departure','Departure date'],['weight','Gross weight']].filter(([i])=>!g(i)).map(x=>x[1]);
+if(g('origin')===g('destination'))miss.push('Different origin and destination ramps');
+if(miss.length){document.getElementById('err').textContent='Fix before getting a quote: '+miss.join(', ')+'.';return false;}
+document.getElementById('err').textContent='';
+const o=g('origin'),d=g('destination'),dep=g('departure'),eq=g('equipment');
+const total=railRate(o,d,eq),fuel=Math.round(total*0.18),line=total-fuel;
+const q=quoteNumber(o,d,dep,eq);
+const cutoff=addDays(dep,-1)+' '+(RAMPS[o]?RAMPS[o][2]:'18:00')+' local';
+const eta=addDays(dep,transitDays(o,d))+' 06:00 local';
+document.getElementById('out').innerHTML=`<div class="result" id="quote"><table>
+<tr><th>Quote number</th><td id="quote-number">${q}</td></tr>
+<tr><th>Lane</th><td>${o} to ${d}</td></tr>
+<tr><th>Equipment</th><td>${eq}</td></tr>
+<tr><th>Line haul</th><td>${money(line)}</td></tr>
+<tr><th>Fuel</th><td>${money(fuel)}</td></tr>
+<tr><th>Total rate</th><td id="total-rate">${money(total)}</td></tr>
+<tr><th>Space available</th><td id="space-available">Yes</td></tr>
+<tr><th>Cut-off</th><td id="cutoff">${cutoff}</td></tr>
+<tr><th>ETA at destination ramp</th><td id="eta">${eta}</td></tr>
+<tr><th>Valid until</th><td>${dep} 23:59 local</td></tr></table>
+<p class="sub" style="margin:8px 0 0">Quote only. To book, use 'New ramp-to-ramp booking' and enter this quote number.</p></div>`;return false;}
+</script></body></html>
