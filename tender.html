@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tender response</title><link rel="stylesheet" href="/styles.css"></head>
+<body><header><b>Tender response</b><small>Midland Brokerage carrier portal (mock)</small></header>
+<div class="demo">Demo environment. Mock of a broker tender accept page.</div>
+<main>
+<h1 id="title">Carrier load tender</h1><p class="sub" id="sub"></p>
+<table id="details"></table>
+<div id="actions" class="row">
+<button id="accept" onclick="respond('Accepted')">Accept tender</button>
+<button id="decline" class="danger" onclick="respond('Declined')">Decline tender</button>
+</div>
+<div id="out"></div>
+</main>
+<script>
+const TENDERS={
+ "01-497570":{carrier:"Loblaw Transport Incorporated (LOMQ)",tendered:"2026-10-08 14:53",expires:"2 hours after tender",pickup:"86160 CFC - Lethbridge Ship To Plant 6, 4093 Cavendish Rd N, Lethbridge AB T1H 6P3 — 2026-10-21 09:00",drop:"86314 Robert - Boucherville QC, 65 Rue de Vaudreuil, Boucherville QC J4B 1K7 — 2026-10-30 00:01–23:59",equipment:"Intermodal reefer, pre-cool 20F, set -10F",weight:"55,676 lb, 1,917 pieces",rate:"CAD 3,494.38 (line haul 2,440.00, fuel 1,053.10, carbon tax 1.28)"}
+};
+const q=new URLSearchParams(location.search);const id=q.get('load')||'01-497570';
+const t=Object.assign({},TENDERS[id]||{carrier:"Loblaw Transport Incorporated (LOMQ)",tendered:"—",expires:"—",pickup:"—",drop:"—",equipment:"—",weight:"—",rate:"—"});
+if(q.get('rate'))t.rate="CAD "+q.get('rate');
+document.getElementById('title').textContent="Carrier load tender "+id;
+document.getElementById('sub').textContent="Tendered to "+t.carrier;
+const rows=[["Load ID",id],["Tendered",t.tendered],["Expires",t.expires],["Pickup",t.pickup],["Last drop",t.drop],["Equipment",t.equipment],["Weight",t.weight],["Rate",t.rate]];
+document.getElementById('details').innerHTML=rows.map(r=>`<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`).join('');
+function respond(status){
+ const ref="TR-"+id.replace(/\D/g,'').slice(-6)+"-"+(status==='Accepted'?'A':'D');
+ const ts=new Date().toLocaleString('en-CA',{timeZone:'America/Toronto'});
+ document.getElementById('actions').remove();
+ document.getElementById('out').innerHTML=`<div class="result ${status==='Accepted'?'':'bad'}" id="confirmation"><b>Tender ${status.toLowerCase()}</b><br>Load ID: <span id="load-id">${id}</span><br>Response: <span id="status">${status}</span><br>Confirmation number: <span id="confirmation-number">${ref}</span><br>Recorded: ${ts} (Toronto)</div>`;
+}
+</script></body></html>

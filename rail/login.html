@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign in – Rail booking portal</title><link rel="stylesheet" href="/styles.css"></head>
+<body><header><b>Rail booking portal</b><small>Mock of a railway customer portal</small></header>
+<div class="demo">Demo environment. Stands in for the CN and CP customer portals.</div>
+<main style="max-width:440px"><h1>Sign in</h1><p class="sub">Use your customer portal account.</p>
+<form id="f" style="grid-template-columns:1fr" onsubmit="return signIn(event)">
+<label>Username<input id="username" name="username" autocomplete="username"></label>
+<label>Password<input id="password" name="password" type="password" autocomplete="current-password"></label>
+<span class="err" id="err"></span>
+<button type="submit" id="sign-in">Sign in</button></form></main>
+<script>
+function signIn(e){e.preventDefault();const u=document.getElementById('username').value.trim(),p=document.getElementById('password').value;
+if(!u||!p){document.getElementById('err').textContent='Enter your username and password.';return false;}
+sessionStorage.setItem('rb_user',u);location.href='/rail/home.html';return false;}
+</script></body></html>

@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home – Rail booking portal</title><link rel="stylesheet" href="/styles.css"><script src="/rail/app.js"></script></head>
+<body><header><b>Rail booking portal</b><small id="who"></small></header>
+<div class="demo">Demo environment. Stands in for the CN and CP customer portals.</div>
+<main><h1>Loblaw Transport Inc.</h1><p class="sub">Customer account LOMQ</p>
+<div class="tiles">
+<a class="tile" href="/rail/book.html"><b>New ramp-to-ramp booking</b>Book a loaded container between two ramps</a>
+<a class="tile" href="/rail/reserve.html"><b>Reserve equipment</b>Hold an empty container at a ramp</a>
+<a class="tile" href="/rail/track.html"><b>Track shipment</b>Latest event and ETA by container</a>
+</div></main>
+<script>requireLogin();document.getElementById('who').textContent='Signed in as '+sessionStorage.getItem('rb_user');</script></body></html>

@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reserve equipment – Rail booking portal</title><link rel="stylesheet" href="/styles.css"><script src="/rail/app.js"></script></head>
+<body><header><b>Rail booking portal</b><small>Reserve equipment</small></header>
+<div class="demo">Demo environment. Stands in for the CN and CP customer portals.</div>
+<main><div id="nav"></div><h1>Reserve equipment</h1><p class="sub">Hold an empty container at a ramp for a pickup date.</p>
+<form onsubmit="return reserve(event)">
+<label>Railway<select id="railway" onchange="fill()"><option>CN</option><option>CP</option></select></label>
+<label>Ramp<select id="ramp"></select></label>
+<label>Container number<input id="container" placeholder="LTGZ 530118"></label>
+<label>Needed by<input id="date" type="date"></label>
+<span class="err full" id="err"></span>
+<div class="full"><button type="submit" id="reserve-equipment">Reserve equipment</button></div></form>
+<div id="out"></div></main>
+<script>
+requireLogin();document.getElementById('nav').innerHTML=nav();
+function fill(){document.getElementById('ramp').innerHTML=rampOptions(document.getElementById('railway').value);}fill();
+function reserve(e){e.preventDefault();const c=document.getElementById('container').value.trim(),d=document.getElementById('date').value;
+if(!c||!d){document.getElementById('err').textContent='Enter a container number and a date.';return false;}
+const ref='RS-'+String(hash(c+d)).padStart(6,'0');
+document.getElementById('out').innerHTML=`<div class="result" id="reservation"><b>Equipment reserved</b><br>Reservation number: <span id="reservation-number">${ref}</span><br>Container: <span id="reserved-container">${c}</span><br>Ramp: ${document.getElementById('ramp').value}<br>Held until: ${d} 23:59 local</div>`;return false;}
+</script></body></html>

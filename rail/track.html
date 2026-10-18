@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Track shipment – Rail booking portal</title><link rel="stylesheet" href="/styles.css"><script src="/rail/app.js"></script></head>
+<body><header><b>Rail booking portal</b><small>Track shipment</small></header>
+<div class="demo">Demo environment. Stands in for the CN and CP customer portals.</div>
+<main><div id="nav"></div><h1>Track shipment</h1><p class="sub">Search by container number.</p>
+<form onsubmit="return track(event)" style="grid-template-columns:2fr 1fr;align-items:end">
+<label>Container number<input id="container" placeholder="CN 241390"></label>
+<button type="submit" id="search">Search</button></form>
+<div id="out"></div></main>
+<script>
+requireLogin();document.getElementById('nav').innerHTML=nav();
+function track(e){e.preventDefault();const raw=document.getElementById('container').value.trim();const key=raw.replace(/\s/g,'').toUpperCase();
+let s=SEEDED_TRACK[key];
+if(!s){let b={};try{b=JSON.parse(localStorage.getItem('rb_bookings')||'{}');}catch(err){}
+ const bk=b[key];
+ if(bk){s={railway:bk.railway,origin:bk.origin,dest:bk.dest,events:[[bk.departure+' 04:30','Departed',RAMPS[bk.origin][1]],[bk.departure+' 19:10','In transit','En route']],eta:bk.eta};}
+ else{s={railway:'—',origin:'—',dest:'—',events:[[new Date().toISOString().slice(0,10)+' 05:00','In transit','En route']],eta:addDays(new Date().toISOString().slice(0,10),3)+' 06:00 local'};}}
+const latest=s.events[s.events.length-1];
+document.getElementById('out').innerHTML=`<div class="result" id="tracking"><table><tr><th>Container</th><td id="container-number">${raw}</td></tr><tr><th>Railway</th><td>${s.railway}</td></tr><tr><th>Route</th><td>${s.origin} to ${s.dest}</td></tr><tr><th>Latest event</th><td id="latest-event">${latest[1]} — ${latest[2]} — ${latest[0]}</td></tr><tr><th>ETA</th><td id="eta">${s.eta}</td></tr></table>
+<h2>Event history</h2><table>${s.events.slice().reverse().map(ev=>`<tr><td>${ev[0]}</td><td>${ev[1]}</td><td>${ev[2]}</td></tr>`).join('')}</table></div>`;return false;}
+</script></body></html>

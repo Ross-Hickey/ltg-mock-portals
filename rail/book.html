@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>New ramp-to-ramp booking – Rail booking portal</title><link rel="stylesheet" href="/styles.css"><script src="/rail/app.js"></script></head>
+<body><header><b>Rail booking portal</b><small>New ramp-to-ramp booking</small></header>
+<div class="demo">Demo environment. Stands in for the CN and CP customer portals.</div>
+<main><div id="nav"></div><h1>New ramp-to-ramp booking</h1><p class="sub">All fields marked required must be filled before you submit.</p>
+<form id="f" onsubmit="return submitBooking(event)">
+<label>Railway (required)<select id="railway" name="railway" onchange="fillRamps()"><option value="CN">CN</option><option value="CP">CP</option></select></label>
+<label>Departure date (required)<input id="departure" name="departure" type="date"></label>
+<label>Origin ramp (required)<select id="origin" name="origin"></select></label>
+<label>Destination ramp (required)<select id="destination" name="destination"></select></label>
+<label>Container number (required)<input id="container" name="container" placeholder="LTGZ 530118"></label>
+<label>Equipment type (required)<select id="equipment" name="equipment" onchange="toggleTemp()"><option>53' dry</option><option>53' heated</option><option>53' reefer</option></select></label>
+<label>Seal number<input id="seal" name="seal"></label>
+<label>Gross weight, lb (required)<input id="weight" name="weight" type="number" min="1"></label>
+<label class="temp">Set point, F<input id="setpoint" name="setpoint" type="number"></label>
+<label class="temp">Pre-cool, F<input id="precool" name="precool" type="number"></label>
+<label>Shipper reference (required)<input id="reference" name="reference" placeholder="PO, load ID or MSTO"></label>
+<label>Customer<input id="customer" name="customer" value="Loblaw Transport Inc."></label>
+<span class="err full" id="err"></span>
+<div class="full"><button type="submit" id="submit-booking">Submit booking</button></div>
+</form></main>
+<script>
+requireLogin();document.getElementById('nav').innerHTML=nav();
+function fillRamps(){const r=document.getElementById('railway').value;document.getElementById('origin').innerHTML=rampOptions(r);document.getElementById('destination').innerHTML=rampOptions(r);}
+function toggleTemp(){const reefer=document.getElementById('equipment').value==="53' reefer";document.querySelectorAll('.temp').forEach(e=>e.style.display=reefer?'flex':'none');}
+fillRamps();toggleTemp();
+function submitBooking(e){e.preventDefault();const g=id=>document.getElementById(id).value.trim();
+const missing=[['departure','Departure date'],['container','Container number'],['weight','Gross weight'],['reference','Shipper reference']].filter(([id])=>!g(id)).map(x=>x[1]);
+if(g('origin')===g('destination'))missing.push('Different origin and destination ramps');
+if(g('equipment')==="53' reefer"&&!g('setpoint'))missing.push('Set point for reefer');
+if(missing.length){document.getElementById('err').textContent='Fix before submitting: '+missing.join(', ')+'.';return false;}
+const p=new URLSearchParams({railway:g('railway'),origin:g('origin'),destination:g('destination'),departure:g('departure'),container:g('container'),equipment:g('equipment'),seal:g('seal'),weight:g('weight'),setpoint:g('setpoint'),precool:g('precool'),reference:g('reference')});
+location.href='/rail/confirm.html?'+p.toString();return false;}
+</script></body></html>

@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+:root{--ink:#1A1D1F;--steel:#5B6770;--line:#D5D9DC;--paper:#FAFAF7;--rail:#1F3B33;--signal:#E0A100;--ok:#2E6B4F;--bad:#9B2C2C}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 "IBM Plex Sans",system-ui,sans-serif;color:var(--ink);background:var(--paper);font-variant-numeric:tabular-nums}
+header{background:var(--rail);color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+header b{font-weight:600;letter-spacing:.2px}
+header small{opacity:.8}
+.demo{background:var(--signal);color:var(--ink);font-size:13px;padding:6px 24px}
+main{max-width:860px;margin:28px auto;padding:0 24px}
+h1{font-size:24px;font-weight:600;margin:0 0 4px}
+h2{font-size:17px;font-weight:600;margin:24px 0 8px}
+p.sub{color:var(--steel);margin:0 0 20px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px}
+label{display:flex;flex-direction:column;font-size:13px;color:var(--steel);gap:4px}
+input,select{font:inherit;color:var(--ink);padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:#fff}
+input:focus,select:focus,button:focus,a:focus{outline:2px solid var(--signal);outline-offset:1px}
+.full{grid-column:1/-1}
+button,.btn{font:inherit;font-weight:500;padding:9px 18px;border-radius:4px;border:1px solid var(--rail);background:var(--rail);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+button.secondary,.btn.secondary{background:#fff;color:var(--rail)}
+button.danger{background:#fff;color:var(--bad);border-color:var(--bad)}
+table{width:100%;border-collapse:collapse;margin:8px 0 16px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:500;color:var(--steel);width:38%}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.tile{border:1px solid var(--line);background:#fff;padding:16px;border-radius:4px;color:var(--ink);text-decoration:none}
+.tile b{display:block;margin-bottom:4px}
+.result{border-left:4px solid var(--ok);background:#fff;padding:14px 18px;margin:12px 0}
+.result.bad{border-color:var(--bad)}
+.err{color:var(--bad);font-size:13px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+@media(max-width:640px){form{grid-template-columns:1fr}}
